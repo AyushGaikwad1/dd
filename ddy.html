@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgriBuddy - Smart Farming Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: url('https://plus.unsplash.com/premium_photo-1661962692059-55d5a4319814?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
+      overflow: hidden;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(240, 255, 240, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 0;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 1.5rem;
+      padding: 3rem 2rem;
+      max-width: 700px;
+      width: 90%;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+      z-index: 1;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 9999px;
+      border: 3px solid #4A5D23;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    h1, p {
+      color: #2D3C0D;
+    }
+
+    .language-btn {
+      background: rgba(255, 255, 255, 0.9);
+      margin: 0.5rem;
+      padding: 0.6rem 1.5rem;
+      border-radius: 999px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .language-btn:hover {
+      background: rgba(220, 255, 220, 0.95);
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center relative">
+
+  <div class="overlay"></div>
+
+  <!-- Language Selection -->
+  <div id="langSelect" class="glass-card text-center relative z-10">
+    <h1 class="text-3xl font-bold mb-6">Select Language / भाषा निवडा</h1>
+    <div>
+      <button class="language-btn" onclick="startSite('en')">English</button>
+      <button class="language-btn" onclick="startSite('hi')">हिन्दी</button>
+      <button class="language-btn" onclick="startSite('mr')">मराठी</button>
+    </div>
+  </div>
+
+  <!-- Main UI -->
+  <div id="mainContent" class="glass-card text-center relative z-10 hidden">
+    <div class="flex justify-center mb-5">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi1AjW7UahCcbVCJP1XK9GJUDHUhYR1AzNUQ&s" alt="AgriBuddy Logo" class="logo" />
+    </div>
+    <h1 class="text-4xl font-bold mb-4">Welcome to <span class="text-green-700">AgriBuddy</span></h1>
+    <p id="description" class="text-lg text-green-900 mb-6 leading-relaxed"></p>
+    <button id="chatBtn" onclick="window.botpress.open()" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-full shadow-md transition duration-300">
+      🌱 Loading...
+    </button>
+  </div>
+
+  <!-- Botpress Chat -->
+  <script src="https://cdn.botpress.cloud/webchat/v2.3/inject.js"></script>
+  <script src="https://files.bpcontent.cloud/2025/04/21/05/20250421054644-YLHY8IH9.js"></script>
+
+  <script>
+    const content = {
+      en: {
+        desc: "AgriBuddy is your AI farming partner, built to support farmers with simple, reliable advice. From identifying crop problems with photos to giving local tips on planting, care, and harvest—AgriBuddy makes modern farming easy and effective. Speak your language, get real help, grow better.",
+        btn: [
+          "🌱 Start Chatting",
+          "🌾 Ask AgriBuddy",
+          "🌿 Grow Smart",
+          "🚜 Chat & Cultivate",
+          "🌱 Let's Talk Farming"
+        ]
+      },
+      hi: {
+        desc: "AgriBuddy आपका एआई खेती सहायक है, जो किसानों को आसान और भरोसेमंद सलाह देता है। फोटो से फसल की बीमारी पहचानें, और स्थानीय मौसम व ज़मीन के अनुसार खेती की सही जानकारी पाएं। अपनी भाषा में बात करें, सही मदद लें, बेहतर फसल उगाएँ।",
+        btn: [
+          "🌱 चैट शुरू करें",
+          "🌾 एग्रीबडी से पूछें",
+          "🌿 स्मार्ट खेती शुरू करें",
+          "🚜 सलाह पाएं",
+          "🌱 चलिए बात करें"
+        ]
+      },
+      mr: {
+        desc: "AgriBuddy हा तुमचा एआय शेती सहाय्यक आहे, जो शेतकऱ्यांना सोपी आणि खात्रीशीर माहिती देतो. फोटोवरून पिकांच्या रोगांची ओळख करा आणि स्थानिक हवामान व जमिनीवर आधारित योग्य सल्ला मिळवा. आपल्या भाषेत बोला, योग्य मदत घ्या, आणि चांगलं पीक घ्या.",
+        btn: [
+          "🌱 चॅट सुरू करा",
+          "🌾 AgriBuddy ला विचारा",
+          "🌿 स्मार्ट शेती करा",
+          "🚜 सल्ला घ्या",
+          "🌱 बोलूया शेतीबद्दल"
+        ]
+      }
+    };
+
+    function startSite(lang) {
+      document.getElementById('langSelect').classList.add('hidden');
+      document.getElementById('mainContent').classList.remove('hidden');
+
+      // Set description
+      document.getElementById('description').innerText = content[lang].desc;
+
+      // Set random button label from language-specific list
+      const randomBtn = content[lang].btn[Math.floor(Math.random() * content[lang].btn.length)];
+      document.getElementById('chatBtn').innerText = randomBtn;
+
+      // Send language to Botpress
+      window.botpress.sendEvent({
+        type: 'session_reset',
+        payload: { language: lang }
+      });
+
+      // Optional: Save selected language
+      localStorage.setItem("userLang", lang);
+    }
+
+    window.botpress.on("webchat:ready", () => {
+      setTimeout(() => {
+        window.botpress.open();
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
